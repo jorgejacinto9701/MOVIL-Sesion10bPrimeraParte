@@ -1,5 +1,7 @@
 package com.cibertec.proyecto.util;
 
+import android.widget.Spinner;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -37,7 +39,16 @@ public class FunctionUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(date);
 	}
-	
+
+	public static int getIndex(Spinner spinner, String myString){
+		for (int i=0;i<spinner.getCount();i++){
+			if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+				return i;
+			}
+		}
+		return -1;
+	}
+
 
 
 }

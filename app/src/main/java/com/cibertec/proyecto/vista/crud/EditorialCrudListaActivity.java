@@ -1,7 +1,9 @@
 package com.cibertec.proyecto.vista.crud;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -42,6 +44,7 @@ public class EditorialCrudListaActivity extends NewAppCompatActivity {
 
         txtNombre = findViewById(R.id.txtCrudEdiNombre);
         btnFiltrar = findViewById(R.id.btnCrudEdiFiltrar);
+        btnRegistra = findViewById(R.id.btnCrudEdiRegistrar);
 
         //construir el listview y adaptador
         lstEditorial = findViewById(R.id.lstCrudEditorial);
@@ -57,6 +60,31 @@ public class EditorialCrudListaActivity extends NewAppCompatActivity {
                 consulta(filtro);
             }
         });
+
+        btnRegistra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Levantar el Activity EditorialCrudForularioActivity  en MODO Registra
+                Intent intent = new Intent(EditorialCrudListaActivity.this,EditorialCrudFormularioActivity.class);
+                intent.putExtra("var_tipo","REGISTRAR");
+                startActivity(intent);
+            }
+        });
+
+        lstEditorial.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Se obtiene la editorial seleccionada
+                Editorial objEditorial = data.get(i);
+
+                //Levantar el Activity EditorialCrudForularioActivity  en MODO Actualiza
+                Intent intent = new Intent(EditorialCrudListaActivity.this,EditorialCrudFormularioActivity.class);
+                intent.putExtra("var_tipo","ACTUALIZAR");
+                intent.putExtra("var_item", objEditorial);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
@@ -82,74 +110,7 @@ public class EditorialCrudListaActivity extends NewAppCompatActivity {
 
 
 
-    public void inserta(Editorial obj){
-        Call<Editorial> call = api.registraEditorial(obj);
-        call.enqueue(new Callback<Editorial>() {
-            @Override
-            public void onResponse(Call<Editorial> call, Response<Editorial> response) {
-                if (response.isSuccessful()){
-                    Editorial objSalida = response.body();
-                    if (objSalida == null){
-                        mensajeAlert("ERROR -> NO se insertó");
-                    }else{
-                        mensajeAlert("ÉXITO -> Se insertó correctamente : " + objSalida.getIdEditorial());
-                    }
-                }else{
-                    mensajeAlert("ERROR -> Error en la respuesta");
-                }
-            }
-            @Override
-            public void onFailure(Call<Editorial> call, Throwable t) {
-                mensajeAlert("ERROR -> " +   t.getMessage());
-            }
-        });
-    }
 
-    public void actualiza(Editorial obj){
-        Call<Editorial> call = api.actualizaEditorial(obj);
-        call.enqueue(new Callback<Editorial>() {
-            @Override
-            public void onResponse(Call<Editorial> call, Response<Editorial> response) {
-                if (response.isSuccessful()){
-                    Editorial objSalida = response.body();
-                    if (objSalida == null){
-                        mensajeToastLong("ERROR -> NO se actualizó");
-                    }else{
-                        mensajeToastLong("ÉXITO -> Se actualizó correctamente : " + objSalida.getIdEditorial());
-                    }
-                }else{
-                    mensajeAlert("ERROR -> Error en la respuesta");
-                }
-            }
-            @Override
-            public void onFailure(Call<Editorial> call, Throwable t) {
-                mensajeAlert("ERROR -> " +   t.getMessage());
-            }
-        });
-    }
-
-    public void elimina(int id) {
-        Call<Editorial> call = api.eliminaEditorial(id);
-        call.enqueue(new Callback<Editorial>() {
-            @Override
-            public void onResponse(Call<Editorial> call, Response<Editorial> response) {
-                if (response.isSuccessful()) {
-                    Editorial objSalida = response.body();
-                    if (objSalida == null){
-                        mensajeAlert("ERROR -> NO se eliminó");
-                    }else{
-                        mensajeAlert("ÉXITO -> Se eliminó correctamente : " + objSalida.getIdEditorial());
-                    }
-                }else{
-                    mensajeAlert("ERROR -> Error en la respuesta");
-                }
-            }
-            @Override
-            public void onFailure(Call<Editorial> call, Throwable t) {
-                mensajeAlert("ERROR -> " +   t.getMessage());
-            }
-        });
-    }
 
 
 

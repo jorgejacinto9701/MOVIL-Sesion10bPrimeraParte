@@ -1,6 +1,8 @@
 package com.cibertec.proyecto.entity;
 
-public class Editorial {
+import java.io.Serializable;
+
+public class Editorial implements Serializable {
 
     private int idEditorial;
     private String nombre;
